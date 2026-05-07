@@ -545,7 +545,7 @@ function NovaShowcase() {
                     Reunião agendada para quinta às 15h com o CTO. Probabilidade de
                     fechamento subiu para <span className="text-amber">78%</span>.
                   </p>
-                  <div className="mt-5 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
+                  <div className="mt-5 h-1.5 w-full overflow-hidden rounded-full bg-foreground/5">
                     <div className="h-full w-[78%] [background:var(--gradient-amber)] shadow-[var(--glow-amber)]" />
                   </div>
                 </LuxCard>

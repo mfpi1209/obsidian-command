@@ -45,7 +45,7 @@ export function ChatPanel({
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 rounded-full border border-border bg-white/5 px-3 py-1.5 text-[11px] text-muted-foreground">
+        <div className="flex items-center gap-2 rounded-full border border-border bg-foreground/5 px-3 py-1.5 text-[11px] text-muted-foreground">
           <span className="size-1.5 rounded-full bg-cyan pulse-ring" />
           NOVA · live
         </div>
