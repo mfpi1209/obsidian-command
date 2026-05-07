@@ -1,12 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import {
   Activity,
   ArrowUpRight,
   Bot,
   Command as CommandIcon,
   Layers,
+  Moon,
   Search,
   Sparkles,
+  Sun,
   TrendingUp,
   Wand2,
   Zap,
