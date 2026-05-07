@@ -96,7 +96,7 @@ export function KanbanColumn({ column }: { column: KanbanColumnData }) {
           </h3>
           <p className="mt-1 text-[11px] text-muted-foreground">{column.hint}</p>
         </div>
-        <span className="num rounded-md bg-white/5 px-2 py-1 text-[11px] text-muted-foreground">
+        <span className="num rounded-md bg-foreground/5 px-2 py-1 text-[11px] text-muted-foreground">
           {column.total}
         </span>
       </header>

@@ -1,12 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import {
   Activity,
   ArrowUpRight,
   Bot,
   Command as CommandIcon,
   Layers,
+  Moon,
   Search,
   Sparkles,
+  Sun,
   TrendingUp,
   Wand2,
   Zap,
@@ -168,6 +171,13 @@ const chatMessages = [
 ];
 
 function NovaShowcase() {
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.toggle("light", theme === "light");
+    root.classList.toggle("dark", theme === "dark");
+  }, [theme]);
+
   return (
     <div className="relative flex min-h-screen w-full overflow-hidden bg-background text-foreground">
       {/* Ambient HUD background */}
@@ -190,13 +200,20 @@ function NovaShowcase() {
             </h1>
           </div>
           <div className="flex items-center gap-3">
-            <div className="hidden md:flex items-center gap-2 rounded-lg border border-border bg-white/5 px-3 py-2 text-[12px] text-muted-foreground">
+            <div className="hidden md:flex items-center gap-2 rounded-lg border border-border bg-foreground/5 px-3 py-2 text-[12px] text-muted-foreground">
               <Search className="size-3.5" />
               Buscar contatos, deals, mensagens…
               <kbd className="ml-3 rounded border border-border bg-background/60 px-1.5 font-mono text-[10px]">
                 ⌘K
               </kbd>
             </div>
+            <button
+              onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
+              aria-label="Alternar tema"
+              className="grid size-9 place-items-center rounded-lg border border-border bg-foreground/5 text-muted-foreground transition-all hover:text-foreground hover:border-primary/40 hover:shadow-[var(--glow-primary)]"
+            >
+              {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+            </button>
             <Button variant="smart" size="sm">
               <Sparkles className="size-3.5" /> NOVA Copilot
             </Button>
@@ -528,7 +545,7 @@ function NovaShowcase() {
                     Reunião agendada para quinta às 15h com o CTO. Probabilidade de
                     fechamento subiu para <span className="text-amber">78%</span>.
                   </p>
-                  <div className="mt-5 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
+                  <div className="mt-5 h-1.5 w-full overflow-hidden rounded-full bg-foreground/5">
                     <div className="h-full w-[78%] [background:var(--gradient-amber)] shadow-[var(--glow-amber)]" />
                   </div>
                 </LuxCard>

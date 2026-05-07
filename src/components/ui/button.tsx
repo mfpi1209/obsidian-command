@@ -14,9 +14,9 @@ const buttonVariants = cva(
         secondary:
           "bg-[var(--surface-raised)] text-foreground border border-border hover:border-border-strong hover:bg-[var(--surface-overlay)]",
         ghost:
-          "text-muted-foreground hover:text-foreground hover:bg-white/5",
+          "text-muted-foreground hover:text-foreground hover:bg-foreground/5",
         outline:
-          "border border-border-strong bg-transparent text-foreground hover:bg-white/5 hover:border-primary/50",
+          "border border-border-strong bg-transparent text-foreground hover:bg-foreground/5 hover:border-primary/50",
         floating:
           "glass-strong text-foreground hover:-translate-y-0.5 hover:shadow-[var(--elev-3),var(--glow-primary)]",
         smart:

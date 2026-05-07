@@ -39,7 +39,7 @@ export function NovaSidebar() {
                 "group relative grid size-11 place-items-center rounded-xl border transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
                 it.active
                   ? "border-primary/40 bg-primary/10 text-primary shadow-[var(--glow-primary)]"
-                  : "border-transparent text-muted-foreground hover:border-border hover:bg-white/5 hover:text-foreground",
+                  : "border-transparent text-muted-foreground hover:border-border hover:bg-foreground/5 hover:text-foreground",
               )}
               aria-label={it.label}
             >
