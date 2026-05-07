@@ -315,6 +315,14 @@
     );
     height: 1px;
   }
+  .light .hairline {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      oklch(0.18 0.02 250 / 0.14) 50%,
+      transparent
+    );
+  }
 
   /* Metallic surface */
   .metal {
@@ -341,6 +349,17 @@
     background-clip: text;
     color: transparent;
   }
+  .light .text-aurora {
+    background: linear-gradient(
+      120deg,
+      oklch(0.25 0.04 250) 0%,
+      oklch(0.5 0.18 248) 50%,
+      oklch(0.62 0.18 50) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 
   /* Tabular numerics for dashboards */
   .num {
@@ -356,6 +375,11 @@
       linear-gradient(90deg, oklch(1 0 0 / 0.04) 1px, transparent 1px);
     background-size: 32px 32px;
     mask-image: radial-gradient(circle at center, black 30%, transparent 75%);
+  }
+  .light .hud-grid {
+    background-image:
+      linear-gradient(oklch(0.18 0.02 250 / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.18 0.02 250 / 0.05) 1px, transparent 1px);
   }
 
   /* Magnetic hover */
@@ -379,6 +403,9 @@
     transition: transform var(--dur-2) var(--ease-out-cinema),
       box-shadow var(--dur-3) var(--ease-out-cinema),
       border-color var(--dur-2) var(--ease-out-cinema);
+  }
+  .light .lux-card {
+    background: linear-gradient(180deg, oklch(1 0 0), oklch(0.985 0.003 240));
   }
   .lux-card::before {
     content: "";
