@@ -225,25 +225,23 @@ function CrmKanbanCard({ card, index }: { card: CrmCard; index: number }) {
 function CrmKanbanColumn({ column }: { column: CrmColumn }) {
   return (
     <section className="flex w-[300px] shrink-0 flex-col gap-3">
-      <div
-        className={cn(
-          "relative overflow-hidden rounded-2xl border border-border bg-[var(--surface)]/60 px-4 py-3 backdrop-blur-md",
-          accentGlow[column.accent],
-        )}
-      >
+      <div className="glass-strong relative overflow-hidden rounded-2xl px-4 py-3">
         <span
-          className={cn("absolute inset-x-0 top-0 h-[2px]", accentBar[column.accent])}
+          className={cn("absolute inset-x-3 top-0 h-px", accentBar[column.accent])}
         />
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h3 className="font-display text-[13px] font-semibold uppercase tracking-[0.16em] text-foreground/90">
-              {column.title}
-            </h3>
-            <p className="num mt-1 font-mono text-[11px] text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <span className={cn("size-1.5 rounded-full", accentDot[column.accent])} />
+              <h3 className="font-display text-[12px] font-semibold uppercase tracking-[0.18em] text-foreground/90">
+                {column.title}
+              </h3>
+            </div>
+            <p className="num mt-1.5 font-mono text-[11px] text-muted-foreground">
               {column.total}
             </p>
           </div>
-          <span className="num grid size-6 place-items-center rounded-md bg-foreground/8 font-mono text-[11px] text-muted-foreground">
+          <span className="num grid size-6 place-items-center rounded-md border border-hairline bg-foreground/[0.04] font-mono text-[11px] text-muted-foreground">
             {column.count}
           </span>
         </div>
