@@ -170,13 +170,18 @@ const chatMessages = [
   },
 ];
 
+type Theme = "dark" | "light" | "carbon";
+const THEME_ORDER: Theme[] = ["dark", "light", "carbon"];
+
 function NovaShowcase() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<Theme>("dark");
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.toggle("light", theme === "light");
-    root.classList.toggle("dark", theme === "dark");
+    root.classList.remove("light", "dark", "carbon");
+    root.classList.add(theme);
   }, [theme]);
+  const cycleTheme = () =>
+    setTheme((t) => THEME_ORDER[(THEME_ORDER.indexOf(t) + 1) % THEME_ORDER.length]);
 
   return (
     <div className="relative flex min-h-screen w-full overflow-hidden bg-background text-foreground">
