@@ -239,6 +239,164 @@
     0 0 28px -4px oklch(0.65 0.13 220 / 0.3);
 }
 
+/* =========================================================
+   CARBON NEON — "Tactical Terminal"
+   Carbon black canvas, neon lime command color, hot magenta
+   for criticals, hard-edge HUD aesthetic.
+   ========================================================= */
+.carbon {
+  --background: oklch(0.13 0.005 160);
+  --foreground: oklch(0.97 0.02 145);
+
+  --surface: oklch(0.16 0.006 160);
+  --surface-raised: oklch(0.19 0.008 158);
+  --surface-overlay: oklch(0.22 0.01 156);
+
+  --card: oklch(0.165 0.008 160);
+  --card-foreground: oklch(0.97 0.02 145);
+  --popover: oklch(0.18 0.008 158);
+  --popover-foreground: oklch(0.98 0.02 145);
+
+  /* Brand — neon lime */
+  --primary: oklch(0.92 0.27 142);
+  --primary-foreground: oklch(0.12 0.01 160);
+
+  --secondary: oklch(0.22 0.01 156);
+  --secondary-foreground: oklch(0.95 0.02 145);
+
+  --muted: oklch(0.2 0.008 158);
+  --muted-foreground: oklch(0.68 0.04 145);
+
+  --accent: oklch(0.24 0.02 142);
+  --accent-foreground: oklch(0.97 0.02 145);
+
+  /* Contextual: hot magenta + electric cyan */
+  --amber: oklch(0.74 0.32 348);
+  --cyan: oklch(0.86 0.18 200);
+  --success: oklch(0.92 0.27 142);
+  --warning: oklch(0.85 0.2 90);
+  --destructive: oklch(0.7 0.3 22);
+  --destructive-foreground: oklch(0.98 0.005 240);
+
+  --border: oklch(0.92 0.27 142 / 12%);
+  --border-strong: oklch(0.92 0.27 142 / 22%);
+  --hairline: oklch(0.92 0.27 142 / 8%);
+  --input: oklch(0.92 0.27 142 / 14%);
+  --ring: oklch(0.92 0.27 142 / 60%);
+
+  --gradient-aurora:
+    radial-gradient(80% 60% at 20% 0%, oklch(0.92 0.27 142 / 0.16), transparent 60%),
+    radial-gradient(60% 50% at 100% 100%, oklch(0.74 0.32 348 / 0.12), transparent 60%);
+  --gradient-glass: linear-gradient(
+    180deg,
+    oklch(0.92 0.27 142 / 0.04) 0%,
+    oklch(1 0 0 / 0.015) 50%,
+    oklch(0 0 0 / 0.2) 100%
+  );
+  --gradient-metal: linear-gradient(
+    180deg,
+    oklch(0.26 0.012 158) 0%,
+    oklch(0.15 0.006 160) 100%
+  );
+  --gradient-primary: linear-gradient(
+    135deg,
+    oklch(0.94 0.28 138) 0%,
+    oklch(0.82 0.25 158) 100%
+  );
+  --gradient-amber: linear-gradient(
+    135deg,
+    oklch(0.78 0.32 348) 0%,
+    oklch(0.62 0.3 18) 100%
+  );
+
+  --elev-1: 0 1px 0 0 oklch(0.92 0.27 142 / 0.05) inset,
+    0 1px 2px oklch(0 0 0 / 0.6);
+  --elev-2: 0 1px 0 0 oklch(0.92 0.27 142 / 0.06) inset,
+    0 8px 24px -8px oklch(0 0 0 / 0.85),
+    0 2px 6px oklch(0 0 0 / 0.5);
+  --elev-3: 0 1px 0 0 oklch(0.92 0.27 142 / 0.08) inset,
+    0 24px 60px -20px oklch(0 0 0 / 0.95),
+    0 8px 20px -8px oklch(0 0 0 / 0.6);
+  --elev-4: 0 1px 0 0 oklch(0.92 0.27 142 / 0.1) inset,
+    0 40px 100px -30px oklch(0 0 0 / 1),
+    0 12px 30px -10px oklch(0 0 0 / 0.7);
+
+  --glow-primary: 0 0 0 1px oklch(0.92 0.27 142 / 0.45),
+    0 0 32px -2px oklch(0.92 0.27 142 / 0.55);
+  --glow-amber: 0 0 0 1px oklch(0.74 0.32 348 / 0.4),
+    0 0 30px -4px oklch(0.74 0.32 348 / 0.5);
+  --glow-cyan: 0 0 0 1px oklch(0.86 0.18 200 / 0.4),
+    0 0 30px -4px oklch(0.86 0.18 200 / 0.45);
+}
+
+.carbon body {
+  background-image: var(--gradient-aurora),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 3px,
+      oklch(0.92 0.27 142 / 0.012) 3px,
+      oklch(0.92 0.27 142 / 0.012) 4px
+    );
+}
+
+.carbon .glass {
+  background:
+    linear-gradient(180deg, oklch(0.92 0.27 142 / 0.035), oklch(1 0 0 / 0.01)),
+    oklch(0.14 0.006 160 / 0.85);
+}
+.carbon .glass-strong {
+  background:
+    linear-gradient(180deg, oklch(0.92 0.27 142 / 0.05), oklch(1 0 0 / 0.015)),
+    oklch(0.16 0.008 160 / 0.92);
+}
+.carbon .hairline {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    oklch(0.92 0.27 142 / 0.35) 50%,
+    transparent
+  );
+}
+.carbon .text-aurora {
+  background: linear-gradient(
+    120deg,
+    oklch(0.97 0.02 145) 0%,
+    oklch(0.92 0.27 142) 50%,
+    oklch(0.74 0.32 348) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.carbon .hud-grid {
+  background-image:
+    linear-gradient(oklch(0.92 0.27 142 / 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.92 0.27 142 / 0.08) 1px, transparent 1px);
+}
+.carbon .lux-card {
+  background: linear-gradient(
+    180deg,
+    oklch(0.18 0.008 160),
+    oklch(0.14 0.006 160)
+  );
+}
+.carbon .lux-card::before {
+  background: radial-gradient(
+    400px circle at var(--mx, 50%) var(--my, 0%),
+    oklch(0.92 0.27 142 / 0.22),
+    transparent 40%
+  );
+}
+.carbon .lux-card:hover {
+  border-color: oklch(0.92 0.27 142 / 0.5);
+  box-shadow: var(--elev-3), 0 0 44px -10px oklch(0.92 0.27 142 / 0.55);
+}
+.carbon ::selection {
+  background: oklch(0.92 0.27 142 / 0.4);
+  color: oklch(0.12 0.01 160);
+}
+
 @layer base {
   * {
     border-color: var(--color-border);

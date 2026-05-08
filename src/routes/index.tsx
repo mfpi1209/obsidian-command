@@ -10,6 +10,7 @@ import {
   Search,
   Sparkles,
   Sun,
+  Terminal,
   TrendingUp,
   Wand2,
   Zap,
@@ -170,13 +171,18 @@ const chatMessages = [
   },
 ];
 
+type Theme = "dark" | "light" | "carbon";
+const THEME_ORDER: Theme[] = ["dark", "light", "carbon"];
+
 function NovaShowcase() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<Theme>("dark");
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.toggle("light", theme === "light");
-    root.classList.toggle("dark", theme === "dark");
+    root.classList.remove("light", "dark", "carbon");
+    root.classList.add(theme);
   }, [theme]);
+  const cycleTheme = () =>
+    setTheme((t) => THEME_ORDER[(THEME_ORDER.indexOf(t) + 1) % THEME_ORDER.length]);
 
   return (
     <div className="relative flex min-h-screen w-full overflow-hidden bg-background text-foreground">
@@ -208,11 +214,12 @@ function NovaShowcase() {
               </kbd>
             </div>
             <button
-              onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
+              onClick={cycleTheme}
               aria-label="Alternar tema"
+              title={`Tema: ${theme}`}
               className="grid size-9 place-items-center rounded-lg border border-border bg-foreground/5 text-muted-foreground transition-all hover:text-foreground hover:border-primary/40 hover:shadow-[var(--glow-primary)]"
             >
-              {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+              {theme === "dark" ? <Sun className="size-4" /> : theme === "light" ? <Terminal className="size-4" /> : <Moon className="size-4" />}
             </button>
             <Button variant="smart" size="sm">
               <Sparkles className="size-3.5" /> NOVA Copilot
