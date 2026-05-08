@@ -10,6 +10,7 @@ import {
   Search,
   Sparkles,
   Sun,
+  Terminal,
   TrendingUp,
   Wand2,
   Zap,
