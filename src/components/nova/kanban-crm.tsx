@@ -50,22 +50,30 @@ export interface CrmColumn {
   cards: CrmCard[];
 }
 
+// Subtle 1px top accent — fades on the edges, no halo
 const accentBar: Record<Tone, string> = {
-  primary: "bg-primary",
-  amber: "bg-amber",
-  cyan: "bg-cyan",
-  success: "bg-success",
-  destructive: "bg-destructive",
-  muted: "bg-muted-foreground",
+  primary:
+    "bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--primary)_70%,transparent)_50%,transparent)]",
+  amber:
+    "bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--amber)_70%,transparent)_50%,transparent)]",
+  cyan:
+    "bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--cyan)_70%,transparent)_50%,transparent)]",
+  success:
+    "bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--success)_70%,transparent)_50%,transparent)]",
+  destructive:
+    "bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--destructive)_70%,transparent)_50%,transparent)]",
+  muted:
+    "bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--muted-foreground)_50%,transparent)_50%,transparent)]",
 };
 
-const accentGlow: Record<Tone, string> = {
-  primary: "shadow-[0_-8px_24px_-8px_var(--primary)]",
-  amber: "shadow-[0_-8px_24px_-8px_var(--amber)]",
-  cyan: "shadow-[0_-8px_24px_-8px_var(--cyan)]",
-  success: "shadow-[0_-8px_24px_-8px_var(--success)]",
-  destructive: "shadow-[0_-8px_24px_-8px_var(--destructive)]",
-  muted: "",
+// Tiny inset glow only — no oversized halo above the column
+const accentDot: Record<Tone, string> = {
+  primary: "bg-primary shadow-[0_0_8px_var(--primary)]",
+  amber: "bg-amber shadow-[0_0_8px_var(--amber)]",
+  cyan: "bg-cyan shadow-[0_0_8px_var(--cyan)]",
+  success: "bg-success shadow-[0_0_8px_var(--success)]",
+  destructive: "bg-destructive shadow-[0_0_8px_var(--destructive)]",
+  muted: "bg-muted-foreground",
 };
 
 const tagTone: Record<Tone, string> = {
