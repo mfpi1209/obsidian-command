@@ -611,12 +611,12 @@ function NovaShowcase() {
           {/* Kanban */}
           <section className="space-y-6">
             <SectionHeader
-              eyebrow="Kanban Flow"
-              title="Um fluxo comercial vivo"
-              caption="Colunas fluidas, cards com personalidade e indicadores contextuais de IA."
+              eyebrow="Kanban Flow · CRM Live"
+              title="Pipeline operacional, totalmente NOVA"
+              caption="Toolbar, abas de status, colunas com totais e cards com canal, dono e contexto — tudo aplicado ao design system."
             />
-            <div className="rounded-3xl border border-border bg-[var(--surface)]/40 p-6 backdrop-blur-md">
-              <KanbanBoard columns={columns} />
+            <div className="rounded-3xl border border-border-strong glass-strong p-6">
+              <CrmKanbanBoard columns={crmColumns} tabs={crmTabs} />
             </div>
           </section>
 
