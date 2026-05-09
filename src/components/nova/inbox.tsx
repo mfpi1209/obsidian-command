@@ -1,5 +1,7 @@
 import * as React from "react";
 import {
+  Activity,
+  AlertCircle,
   ArrowLeftRight,
   Bell,
   Bot,
@@ -11,6 +13,7 @@ import {
   FileText,
   Filter,
   Headphones,
+  List,
   Mail,
   MessageSquare,
   Mic,
