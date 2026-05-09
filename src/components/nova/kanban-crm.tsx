@@ -261,11 +261,12 @@ function CrmKanbanColumn({ column }: { column: CrmColumn }) {
 
 /* ===================== Tabs ===================== */
 
-interface CrmTab {
+export interface CrmTab {
   id: string;
   label: string;
   count: number;
   tone: Tone;
+  active?: boolean;
 }
 
 function StatusTabs({
