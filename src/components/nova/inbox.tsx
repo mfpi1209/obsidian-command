@@ -934,10 +934,10 @@ function MessageBubble({ m, index }: { m: ChatMessage; index: number }) {
       <div className="max-w-[70%]">
         <div
           className={cn(
-            "rounded-2xl border px-4 py-2.5 text-[13px] leading-relaxed shadow-[var(--elev-1)] backdrop-blur-md",
+            "rounded-2xl border px-4 py-2.5 text-[13px] leading-relaxed shadow-[var(--elev-2)] backdrop-blur-md",
             isMe
-              ? "rounded-br-md border-primary/35 bg-primary/12 text-foreground"
-              : "rounded-bl-md border-hairline bg-surface/70 text-foreground",
+              ? "rounded-br-md border-primary/50 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground"
+              : "rounded-bl-md border-hairline bg-surface-raised text-foreground",
           )}
         >
           {m.text}
