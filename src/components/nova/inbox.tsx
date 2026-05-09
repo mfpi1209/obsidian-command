@@ -336,20 +336,7 @@ function ConversationList() {
       </div>
 
       <div className="px-4 py-3">
-        <button className="flex w-full items-center justify-between rounded-xl border border-hairline bg-foreground/[0.04] px-3 py-2 text-[12px] text-muted-foreground transition hover:text-foreground">
-          <span className="inline-flex items-center gap-2">
-            <span className="grid size-5 place-items-center rounded-md bg-foreground/10 text-foreground">
-              <MessageSquare className="size-3" />
-            </span>
-            <span className="font-medium uppercase tracking-[0.12em]">Todos</span>
-          </span>
-          <span className="inline-flex items-center gap-2">
-            <span className="num rounded-md border border-hairline bg-foreground/5 px-1.5 py-px font-mono text-[10px]">
-              24
-            </span>
-            <ChevronDown className="size-3" />
-          </span>
-        </button>
+        <InboxFilterMenu />
       </div>
 
       <div className="flex-1 overflow-y-auto px-2 pb-4">
