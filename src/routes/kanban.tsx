@@ -116,7 +116,7 @@ function KanbanPage() {
       <div className="relative flex min-h-screen">
         <NovaSidebar />
         <main className="flex-1 overflow-x-auto px-6 py-6">
-          <CrmKanbanBoard columns={columns} />
+          <CrmKanbanBoard columns={columns} tabs={tabs} />
         </main>
       </div>
     </div>
