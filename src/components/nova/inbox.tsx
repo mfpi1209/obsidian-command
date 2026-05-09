@@ -662,14 +662,14 @@ function MessageBubble({ m, index }: { m: ChatMessage; index: number }) {
             className={cn(
               "flex items-center gap-3 rounded-2xl border px-3 py-2.5 shadow-[var(--elev-1)] backdrop-blur-md",
               isMe
-                ? "rounded-br-md border-primary/30 bg-primary/15"
+                ? "rounded-br-md border-primary/40 bg-primary/12"
                 : "rounded-bl-md border-hairline bg-surface/70",
             )}
           >
             <span
               className={cn(
                 "grid size-10 place-items-center rounded-lg",
-                isMe ? "bg-primary/25 text-primary-foreground" : "bg-foreground/10 text-foreground",
+                isMe ? "bg-primary/20 text-primary" : "bg-foreground/10 text-foreground",
               )}
             >
               <FileText className="size-5" />
@@ -683,12 +683,7 @@ function MessageBubble({ m, index }: { m: ChatMessage; index: number }) {
               </p>
             </div>
             <button
-              className={cn(
-                "grid size-8 place-items-center rounded-lg transition",
-                isMe
-                  ? "bg-background/15 text-foreground hover:bg-background/25"
-                  : "bg-foreground/5 text-muted-foreground hover:text-foreground",
-              )}
+              className="grid size-8 place-items-center rounded-lg bg-foreground/5 text-muted-foreground transition hover:text-foreground"
             >
               <Download className="size-3.5" />
             </button>
@@ -718,10 +713,10 @@ function MessageBubble({ m, index }: { m: ChatMessage; index: number }) {
         <div className="max-w-[70%]">
           <div
             className={cn(
-              "rounded-2xl px-4 py-2.5 text-[13px] leading-relaxed shadow-[var(--elev-1)]",
+              "rounded-2xl border px-4 py-2.5 text-[13px] leading-relaxed shadow-[var(--elev-1)] backdrop-blur-md",
               isMe
-                ? "bg-gradient-to-br from-primary to-cyan/80 text-primary-foreground rounded-br-md"
-                : "bg-surface/70 text-foreground border border-hairline rounded-bl-md backdrop-blur-md",
+                ? "rounded-br-md border-success/35 bg-success/10 text-foreground"
+                : "rounded-bl-md border-hairline bg-surface/70 text-foreground",
             )}
           >
             <div className="mb-1.5 flex items-center gap-1.5">
@@ -729,19 +724,14 @@ function MessageBubble({ m, index }: { m: ChatMessage; index: number }) {
                 className={cn(
                   "inline-flex items-center gap-1 rounded-md border px-1.5 py-px text-[9px] font-semibold uppercase tracking-[0.16em]",
                   isMe
-                    ? "border-primary-foreground/40 bg-primary-foreground/15 text-primary-foreground"
+                    ? "border-success/40 bg-success/15 text-success"
                     : "border-amber/35 bg-amber/12 text-amber",
                 )}
               >
                 <Sparkles className="size-2.5" /> Template
               </span>
               {m.templateId && (
-                <span
-                  className={cn(
-                    "num font-mono text-[10px]",
-                    isMe ? "text-primary-foreground/75" : "text-muted-foreground",
-                  )}
-                >
+                <span className="num font-mono text-[10px] text-muted-foreground">
                   [TEMPLATE:{m.templateId}]
                 </span>
               )}
@@ -772,10 +762,10 @@ function MessageBubble({ m, index }: { m: ChatMessage; index: number }) {
       <div className="max-w-[70%]">
         <div
           className={cn(
-            "rounded-2xl px-4 py-2.5 text-[13px] leading-relaxed shadow-[var(--elev-1)]",
+            "rounded-2xl border px-4 py-2.5 text-[13px] leading-relaxed shadow-[var(--elev-1)] backdrop-blur-md",
             isMe
-              ? "bg-gradient-to-br from-primary to-cyan/80 text-primary-foreground rounded-br-md"
-              : "bg-surface/70 text-foreground border border-hairline rounded-bl-md backdrop-blur-md",
+              ? "rounded-br-md border-primary/35 bg-primary/12 text-foreground"
+              : "rounded-bl-md border-hairline bg-surface/70 text-foreground",
           )}
         >
           {m.text}
