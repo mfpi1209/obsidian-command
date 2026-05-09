@@ -1,5 +1,7 @@
 import * as React from "react";
 import {
+  Activity,
+  AlertCircle,
   ArrowLeftRight,
   Bell,
   Bot,
@@ -11,6 +13,7 @@ import {
   FileText,
   Filter,
   Headphones,
+  List,
   Mail,
   MessageSquare,
   Mic,
@@ -290,6 +293,166 @@ function ChannelAvatar({
   );
 }
 
+/* ===================== Filter / scope dropdown ===================== */
+
+type ScopeId =
+  | "todos"
+  | "esperando"
+  | "entrada"
+  | "respondidos"
+  | "automacao"
+  | "finalizados"
+  | "erros";
+
+interface ScopeItem {
+  id: ScopeId;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  count: number;
+  tone: Tone;
+}
+
+const SCOPE_GROUPS: { label: string; items: ScopeItem[] }[] = [
+  {
+    label: "Entrada",
+    items: [
+      { id: "todos", label: "Todos", icon: List, count: 24, tone: "muted" },
+      { id: "esperando", label: "Esperando", icon: Clock, count: 2, tone: "amber" },
+      { id: "entrada", label: "Entrada", icon: Activity, count: 8, tone: "primary" },
+      { id: "respondidos", label: "Respondidos", icon: MessageSquare, count: 11, tone: "cyan" },
+      { id: "automacao", label: "Automação", icon: Bot, count: 3, tone: "primary" },
+      { id: "finalizados", label: "Finalizados", icon: CheckCheck, count: 142, tone: "success" },
+      { id: "erros", label: "Erros", icon: AlertCircle, count: 1, tone: "destructive" },
+    ],
+  },
+];
+
+const scopeIconTone: Record<Tone, string> = {
+  primary: "bg-primary/15 text-primary",
+  amber: "bg-amber/15 text-amber",
+  cyan: "bg-cyan/15 text-cyan",
+  success: "bg-success/15 text-success",
+  destructive: "bg-destructive/15 text-destructive",
+  muted: "bg-foreground/10 text-foreground",
+};
+
+function InboxFilterMenu() {
+  const [open, setOpen] = React.useState(false);
+  const [active, setActive] = React.useState<ScopeId>("entrada");
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (!open) return;
+    const onClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  const all = SCOPE_GROUPS.flatMap((g) => g.items);
+  const activeItem = all.find((i) => i.id === active) ?? all[0];
+  const ActiveIcon = activeItem.icon;
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        className={cn(
+          "flex w-full items-center justify-between rounded-xl border px-3 py-2 text-[12px] transition",
+          open
+            ? "border-primary/40 bg-primary/8 text-foreground shadow-[var(--elev-1)]"
+            : "border-hairline bg-foreground/[0.04] text-muted-foreground hover:text-foreground hover:border-border",
+        )}
+      >
+        <span className="inline-flex items-center gap-2">
+          <span className={cn("grid size-5 place-items-center rounded-md", scopeIconTone[activeItem.tone])}>
+            <ActiveIcon className="size-3" />
+          </span>
+          <span className="font-medium uppercase tracking-[0.12em] text-foreground">
+            {activeItem.label}
+          </span>
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span className="num rounded-md border border-hairline bg-foreground/5 px-1.5 py-px font-mono text-[10px] text-muted-foreground">
+            {activeItem.count}
+          </span>
+          <ChevronDown className={cn("size-3 transition-transform", open && "rotate-180")} />
+        </span>
+      </button>
+
+      {open && (
+        <div
+          role="menu"
+          className="anim-in absolute left-0 right-0 top-[calc(100%+6px)] z-40 overflow-hidden rounded-xl border border-hairline bg-[var(--surface-overlay)]/95 shadow-[var(--elev-2)] backdrop-blur-xl"
+        >
+          {SCOPE_GROUPS.map((group) => (
+            <div key={group.label} className="py-1.5">
+              <div className="flex items-center gap-2 px-3 pb-1 pt-1.5">
+                <span className="size-1 rounded-full bg-primary shadow-[0_0_6px_var(--primary)]" />
+                <span className="font-display text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  {group.label}
+                </span>
+              </div>
+              <ul className="px-1.5">
+                {group.items.map((it) => {
+                  const Ic = it.icon;
+                  const isActive = it.id === active;
+                  return (
+                    <li key={it.id}>
+                      <button
+                        type="button"
+                        role="menuitemradio"
+                        aria-checked={isActive}
+                        onClick={() => {
+                          setActive(it.id);
+                          setOpen(false);
+                        }}
+                        className={cn(
+                          "group flex w-full items-center justify-between gap-3 rounded-lg px-2.5 py-1.5 text-[12px] transition",
+                          isActive
+                            ? "bg-primary/10 text-foreground ring-1 ring-primary/25"
+                            : "text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground",
+                        )}
+                      >
+                        <span className="inline-flex min-w-0 items-center gap-2.5">
+                          <span className={cn("grid size-5 place-items-center rounded-md", scopeIconTone[it.tone])}>
+                            <Ic className="size-3" />
+                          </span>
+                          <span className="truncate font-medium">{it.label}</span>
+                        </span>
+                        <span className="num shrink-0 rounded-md border border-hairline bg-foreground/5 px-1.5 py-px font-mono text-[10px] text-muted-foreground">
+                          {it.count}
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+          <div className="border-t border-hairline px-3 py-2">
+            <button className="flex w-full items-center justify-between text-[11px] text-muted-foreground transition hover:text-foreground">
+              <span className="inline-flex items-center gap-1.5">
+                <Filter className="size-3" /> Filtros avançados
+              </span>
+              <ChevronRight className="size-3" />
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ===================== Coluna 1 — Lista de conversas ===================== */
 
 function ConversationList() {
@@ -333,20 +496,7 @@ function ConversationList() {
       </div>
 
       <div className="px-4 py-3">
-        <button className="flex w-full items-center justify-between rounded-xl border border-hairline bg-foreground/[0.04] px-3 py-2 text-[12px] text-muted-foreground transition hover:text-foreground">
-          <span className="inline-flex items-center gap-2">
-            <span className="grid size-5 place-items-center rounded-md bg-foreground/10 text-foreground">
-              <MessageSquare className="size-3" />
-            </span>
-            <span className="font-medium uppercase tracking-[0.12em]">Todos</span>
-          </span>
-          <span className="inline-flex items-center gap-2">
-            <span className="num rounded-md border border-hairline bg-foreground/5 px-1.5 py-px font-mono text-[10px]">
-              24
-            </span>
-            <ChevronDown className="size-3" />
-          </span>
-        </button>
+        <InboxFilterMenu />
       </div>
 
       <div className="flex-1 overflow-y-auto px-2 pb-4">
