@@ -2,7 +2,14 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Moon, Sun, Terminal } from "lucide-react";
 import { NovaSidebar } from "@/components/nova/sidebar";
-import { CrmKanbanBoard, type CrmColumn } from "@/components/nova/kanban-crm";
+import { CrmKanbanBoard, type CrmColumn, type CrmTab } from "@/components/nova/kanban-crm";
+
+const tabs: CrmTab[] = [
+  { id: "open", label: "Abertos", count: 16, tone: "primary" },
+  { id: "won", label: "Ganhos", count: 8, tone: "success" },
+  { id: "lost", label: "Perdidos", count: 3, tone: "destructive" },
+  { id: "all", label: "Todos", count: 18, tone: "muted", active: true },
+];
 
 type Theme = "dark" | "light" | "carbon";
 const ORDER: Theme[] = ["dark", "light", "carbon"];
