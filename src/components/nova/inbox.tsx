@@ -7,6 +7,8 @@ import {
   ChevronDown,
   ChevronRight,
   Clock,
+  Download,
+  FileText,
   Filter,
   Headphones,
   Mail,
@@ -14,6 +16,7 @@ import {
   Mic,
   Paperclip,
   Phone,
+  Pin,
   Plus,
   Search,
   Send,
@@ -27,9 +30,11 @@ import {
 import { cn } from "@/lib/utils";
 
 /* =========================================================
-   NOVA · Inbox / Chat Operacional
-   3 colunas: Conversas · Conversa · Deal & Contato
-   Dark + Light suportados via tokens do design system.
+   NOVA · Inbox / Chat Operacional — V2
+   - Dataset alinhado ao preview (Ana Beatriz Ramos ativa)
+   - Novas variantes: template, attachment, note
+   - Composer com estados: active | expired (sessão 24h)
+   - Painel CRM com empty state de Negócio
    ========================================================= */
 
 type Channel = "whatsapp" | "instagram" | "email";
@@ -65,60 +70,8 @@ interface Conversation {
   read?: boolean;
 }
 
+/* Ordem do preview: Ana(ativa) ▸ Ana(IG) ▸ Karina ▸ Diego ▸ João ▸ Leonardo ▸ Jéssica */
 const conversations: Conversation[] = [
-  {
-    id: "diego",
-    contact: "Diego Alves",
-    initials: "DA",
-    channel: "whatsapp",
-    preview: "oba",
-    age: "2 sem",
-    ownerInitials: "AE",
-    active: true,
-    read: true,
-    tags: [
-      { label: "Frio", tone: "primary" },
-      { label: "Em Curso", tone: "cyan" },
-    ],
-  },
-  {
-    id: "joao",
-    contact: "João Pedro Silva",
-    initials: "JS",
-    channel: "whatsapp",
-    preview: "João, enviei a agenda proposta…",
-    age: "2 sem",
-    ownerInitials: "AE",
-    read: true,
-    tags: [{ label: "Quente", tone: "amber" }],
-  },
-  {
-    id: "leo",
-    contact: "Leonardo Mendes",
-    initials: "LM",
-    channel: "whatsapp",
-    preview: "Áudio · 0:47",
-    age: "2 sem",
-    ownerInitials: "AE",
-    audio: true,
-    read: true,
-    tags: [
-      { label: "Parceiro", tone: "success" },
-      { label: "Quente", tone: "amber" },
-    ],
-  },
-  {
-    id: "karina",
-    contact: "Karina Teixeira",
-    initials: "KT",
-    channel: "whatsapp",
-    preview: "Áudio · 1:12",
-    age: "4d",
-    ownerInitials: "AE",
-    audio: true,
-    read: true,
-    tags: [{ label: "Frio", tone: "primary" }],
-  },
   {
     id: "ana1",
     contact: "Ana Beatriz Ramos",
@@ -128,6 +81,7 @@ const conversations: Conversation[] = [
     age: "3 sem",
     ownerInitials: "AE",
     unread: 2,
+    active: true,
     tags: [
       { label: "Quente", tone: "amber" },
       { label: "Indicação", tone: "primary" },
@@ -147,6 +101,58 @@ const conversations: Conversation[] = [
     ],
   },
   {
+    id: "karina",
+    contact: "Karina Teixeira",
+    initials: "KT",
+    channel: "whatsapp",
+    preview: "Áudio · 1:12",
+    age: "4d",
+    ownerInitials: "AE",
+    audio: true,
+    read: true,
+    tags: [{ label: "Frio", tone: "primary" }],
+  },
+  {
+    id: "diego",
+    contact: "Diego Alves",
+    initials: "DA",
+    channel: "whatsapp",
+    preview: "oba",
+    age: "3 sem",
+    ownerInitials: "AE",
+    read: true,
+    tags: [
+      { label: "Frio", tone: "primary" },
+      { label: "Em Curso", tone: "cyan" },
+    ],
+  },
+  {
+    id: "joao",
+    contact: "João Pedro Silva",
+    initials: "JS",
+    channel: "whatsapp",
+    preview: "João, enviei a agenda proposta…",
+    age: "3 sem",
+    ownerInitials: "AE",
+    read: true,
+    tags: [{ label: "Quente", tone: "amber" }],
+  },
+  {
+    id: "leo",
+    contact: "Leonardo Mendes",
+    initials: "LM",
+    channel: "whatsapp",
+    preview: "Áudio · 0:47",
+    age: "3 sem",
+    ownerInitials: "AE",
+    audio: true,
+    read: true,
+    tags: [
+      { label: "Parceiro", tone: "success" },
+      { label: "Quente", tone: "amber" },
+    ],
+  },
+  {
     id: "jess",
     contact: "Jéssica Mendes",
     initials: "JM",
@@ -158,47 +164,83 @@ const conversations: Conversation[] = [
   },
 ];
 
+/* ===================== Mensagens (Ana Beatriz) ===================== */
+
 interface ChatMessage {
   id: string;
-  from: "them" | "me" | "ai";
-  text: string;
+  from: "them" | "me" | "ai" | "note";
+  variant?: "text" | "template" | "attachment";
+  text?: string;
+  templateId?: string;
+  file?: { name: string; size: string; kind: "pdf" | "img" | "doc" };
+  noteAuthor?: string;
   time: string;
   read?: boolean;
 }
 
 const messages: ChatMessage[] = [
   {
-    id: "1",
-    from: "them",
-    text: "Oi, vi o anúncio e queria saber mais sobre o curso de IA.",
-    time: "13:20",
-  },
-  {
-    id: "2",
-    from: "them",
-    text: "O curso é online? Qual o valor?",
-    time: "13:35",
-  },
-  {
-    id: "3",
-    from: "ai",
-    text: "Sugestão: responder com o link do material e oferecer demo gratuita. Lead com perfil de conversão alta (87%).",
-    time: "",
-  },
-  {
-    id: "4",
+    id: "m1",
     from: "me",
-    text: "Oi Diego! Tudo bem? Sim, é 100% online com mentorias ao vivo. Te envio agora a grade completa e um cupom de R$ 200 off.",
-    time: "15:28",
+    variant: "template",
+    templateId: "promo_abril_2026",
+    text:
+      "Olá Ana! 🌟 Estamos com vagas abertas para a turma de Abril. Posso te enviar a grade completa e condições especiais para indicação?",
+    time: "13:12",
     read: true,
   },
   {
-    id: "5",
+    id: "m2",
     from: "them",
-    text: "oba",
-    time: "15:32",
+    text: "Oi! Sim, por favor. Recebi sua indicação pela Karina 💙",
+    time: "13:35",
+  },
+  {
+    id: "m3",
+    from: "them",
+    text: "Tenho uma dúvida sobre o pagamento — vocês parcelam em quantas vezes?",
+    time: "13:38",
+  },
+  {
+    id: "m4",
+    from: "note",
+    noteAuthor: "Admin EduIT",
+    text:
+      "Lead veio por indicação da Karina (parceira). Aplicar cupom INDICA20 e priorizar resposta — perfil quente.",
+    time: "13:52",
+  },
+  {
+    id: "m5",
+    from: "me",
+    variant: "attachment",
+    file: { name: "grade-curso-ia-abril-2026.pdf", size: "2.4 MB", kind: "pdf" },
+    time: "14:01",
+    read: true,
+  },
+  {
+    id: "m6",
+    from: "me",
+    text:
+      "Ana, segue a grade. Parcelamos em até 12x sem juros no cartão e com 20% off via cupom INDICA20 (indicação da Karina).",
+    time: "14:02",
+    read: true,
+  },
+  {
+    id: "m7",
+    from: "ai",
+    text:
+      "Lead com 92% de probabilidade de conversão. Sugestão: agendar call de 15min ainda hoje e enviar contrato após confirmação.",
+    time: "14:04",
+  },
+  {
+    id: "m8",
+    from: "them",
+    text: "Perfeito! Consigo às 17h?",
+    time: "14:06",
   },
 ];
+
+/* ===================== Avatar ===================== */
 
 function ChannelAvatar({
   initials,
@@ -253,7 +295,6 @@ function ChannelAvatar({
 function ConversationList() {
   return (
     <aside className="flex h-full w-[340px] shrink-0 flex-col border-r border-hairline bg-surface/40 backdrop-blur-xl">
-      {/* Header */}
       <div className="flex items-center justify-between gap-2 px-4 py-3">
         <div className="flex items-center gap-2">
           <h2 className="font-display text-[15px] font-semibold tracking-tight">
@@ -278,7 +319,6 @@ function ConversationList() {
         </div>
       </div>
 
-      {/* Search */}
       <div className="px-4">
         <div className="relative flex items-center">
           <Search className="absolute left-3 size-3.5 text-muted-foreground" />
@@ -292,7 +332,6 @@ function ConversationList() {
         </div>
       </div>
 
-      {/* Tabs / filtro */}
       <div className="px-4 py-3">
         <button className="flex w-full items-center justify-between rounded-xl border border-hairline bg-foreground/[0.04] px-3 py-2 text-[12px] text-muted-foreground transition hover:text-foreground">
           <span className="inline-flex items-center gap-2">
@@ -310,7 +349,6 @@ function ConversationList() {
         </button>
       </div>
 
-      {/* Lista */}
       <div className="flex-1 overflow-y-auto px-2 pb-4">
         <ul className="flex flex-col gap-1">
           {conversations.map((c, i) => (
@@ -341,7 +379,13 @@ function ConversationRow({ conv, index }: { conv: Conversation; index: number })
       <ChannelAvatar
         initials={conv.initials}
         channel={conv.channel}
-        tone={conv.channel === "instagram" ? "amber" : conv.channel === "email" ? "cyan" : "success"}
+        tone={
+          conv.channel === "instagram"
+            ? "amber"
+            : conv.channel === "email"
+              ? "cyan"
+              : "success"
+        }
       />
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline justify-between gap-2">
@@ -388,18 +432,19 @@ function ConversationRow({ conv, index }: { conv: Conversation; index: number })
 /* ===================== Coluna 2 — Conversa ===================== */
 
 function ConversationPanel() {
+  const [composer, setComposer] = React.useState<"active" | "expired">("expired");
+
   return (
     <section className="flex h-full flex-1 flex-col bg-background/30">
-      {/* Header da conversa */}
       <header className="flex items-center justify-between gap-4 border-b border-hairline bg-surface/40 px-5 py-3 backdrop-blur-xl">
         <div className="flex items-center gap-3">
-          <ChannelAvatar initials="DA" channel="whatsapp" size="lg" tone="success" />
+          <ChannelAvatar initials="AR" channel="whatsapp" size="lg" tone="success" />
           <div>
             <h3 className="font-display text-[15px] font-semibold leading-tight">
-              Diego Alves
+              Ana Beatriz Ramos
             </h3>
             <p className="num font-mono text-[11px] text-muted-foreground">
-              +55 41 99812-3456 · online há 4min
+              +55 11 92222-2222 · sessão expirada há 22h
             </p>
           </div>
         </div>
@@ -426,7 +471,13 @@ function ConversationPanel() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <button className="grid size-8 place-items-center rounded-lg border border-hairline bg-foreground/5 text-muted-foreground transition hover:text-foreground">
+          <button
+            onClick={() =>
+              setComposer((c) => (c === "active" ? "expired" : "active"))
+            }
+            title="Alternar estado do composer (demo)"
+            className="grid size-8 place-items-center rounded-lg border border-hairline bg-foreground/5 text-muted-foreground transition hover:text-foreground"
+          >
             <ArrowLeftRight className="size-3.5" />
           </button>
           <button className="grid size-8 place-items-center rounded-lg border border-hairline bg-foreground/5 text-muted-foreground transition hover:text-foreground">
@@ -444,11 +495,9 @@ function ConversationPanel() {
         </div>
       </header>
 
-      {/* Mensagens */}
       <div className="relative flex-1 overflow-y-auto px-8 py-6">
         <div className="pointer-events-none absolute inset-0 hud-grid opacity-30" />
         <div className="relative mx-auto flex max-w-[720px] flex-col gap-4">
-          {/* Date pill */}
           <div className="flex justify-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-hairline bg-surface/60 px-3 py-1 font-mono text-[10px] text-muted-foreground backdrop-blur-md">
               <span className="size-1 rounded-full bg-primary" />
@@ -462,68 +511,104 @@ function ConversationPanel() {
         </div>
       </div>
 
-      {/* Aviso WhatsApp */}
-      <div className="mx-5 mb-3 flex items-center justify-between gap-3 rounded-xl border border-amber/30 bg-amber/8 px-4 py-2.5 backdrop-blur-md">
-        <div className="flex items-center gap-3">
-          <span className="grid size-8 place-items-center rounded-lg bg-amber/15 text-amber">
-            <Clock className="size-4" />
-          </span>
-          <div>
-            <p className="text-[12px] font-medium text-foreground">
-              Sessão de 24h encerrada
-            </p>
-            <p className="text-[11px] text-muted-foreground">
-              Apenas templates aprovados pelo WhatsApp podem ser enviados.
-            </p>
-          </div>
-        </div>
-        <button className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-amber to-destructive/80 px-3 py-1.5 text-[12px] font-semibold text-background shadow-[var(--glow-amber)] transition hover:brightness-110">
-          <Sparkles className="size-3.5" /> Usar template
-        </button>
-      </div>
-
-      {/* Composer */}
-      <div className="border-t border-hairline bg-surface/40 px-5 py-3 backdrop-blur-xl">
-        <div className="flex items-end gap-2">
-          <button className="grid size-9 place-items-center rounded-lg border border-hairline bg-foreground/5 text-muted-foreground transition hover:text-foreground">
-            <Plus className="size-4" />
-          </button>
-          <button className="grid size-9 place-items-center rounded-lg border border-hairline bg-foreground/5 text-muted-foreground transition hover:text-foreground">
-            <Smile className="size-4" />
-          </button>
-          <div className="relative flex-1">
-            <textarea
-              rows={1}
-              placeholder="Digite uma mensagem… use / para comandos NOVA"
-              className="w-full resize-none rounded-xl border border-hairline bg-background/50 px-4 py-2.5 pr-28 text-[13px] text-foreground placeholder:text-muted-foreground backdrop-blur-md outline-none transition focus:border-primary/40 focus:shadow-[var(--glow-primary)]"
-            />
-            <div className="absolute right-2 top-1.5 flex items-center gap-1">
-              <button className="inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-2 py-1 text-[10px] font-medium text-primary transition hover:bg-primary/20">
-                <Bot className="size-3" /> NOVA
-              </button>
-              <button className="grid size-7 place-items-center rounded-md text-muted-foreground transition hover:text-foreground">
-                <Paperclip className="size-3.5" />
-              </button>
+      {composer === "expired" && (
+        <div className="mx-5 mb-3 flex items-center justify-between gap-3 rounded-xl border border-amber/30 bg-amber/8 px-4 py-2.5 backdrop-blur-md">
+          <div className="flex items-center gap-3">
+            <span className="grid size-8 place-items-center rounded-lg bg-amber/15 text-amber">
+              <Clock className="size-4" />
+            </span>
+            <div>
+              <p className="text-[12px] font-medium text-foreground">
+                Sessão de 24h encerrada
+              </p>
+              <p className="text-[11px] text-muted-foreground">
+                Apenas templates aprovados pelo WhatsApp podem ser enviados.
+              </p>
             </div>
           </div>
-          <button className="grid size-9 place-items-center rounded-lg border border-hairline bg-foreground/5 text-muted-foreground transition hover:text-foreground">
-            <Mic className="size-4" />
-          </button>
-          <button className="grid size-9 place-items-center rounded-lg bg-gradient-to-br from-primary to-cyan/80 text-primary-foreground shadow-[var(--glow-primary)] transition hover:brightness-110">
-            <Send className="size-4" />
+          <button className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-amber to-destructive/80 px-3 py-1.5 text-[12px] font-semibold text-background shadow-[var(--glow-amber)] transition hover:brightness-110">
+            <Sparkles className="size-3.5" /> Usar template
           </button>
         </div>
+      )}
+
+      <div className="border-t border-hairline bg-surface/40 px-5 py-3 backdrop-blur-xl">
+        {composer === "active" ? <ComposerActive /> : <ComposerExpired />}
       </div>
     </section>
   );
 }
 
+function ComposerActive() {
+  return (
+    <div className="flex items-end gap-2">
+      <button className="grid size-9 place-items-center rounded-lg border border-hairline bg-foreground/5 text-muted-foreground transition hover:text-foreground">
+        <Plus className="size-4" />
+      </button>
+      <button className="grid size-9 place-items-center rounded-lg border border-hairline bg-foreground/5 text-muted-foreground transition hover:text-foreground">
+        <Smile className="size-4" />
+      </button>
+      <div className="relative flex-1">
+        <textarea
+          rows={1}
+          placeholder="Digite uma mensagem… use / para comandos NOVA"
+          className="w-full resize-none rounded-xl border border-hairline bg-background/50 px-4 py-2.5 pr-28 text-[13px] text-foreground placeholder:text-muted-foreground backdrop-blur-md outline-none transition focus:border-primary/40 focus:shadow-[var(--glow-primary)]"
+        />
+        <div className="absolute right-2 top-1.5 flex items-center gap-1">
+          <button className="inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-2 py-1 text-[10px] font-medium text-primary transition hover:bg-primary/20">
+            <Bot className="size-3" /> NOVA
+          </button>
+          <button className="grid size-7 place-items-center rounded-md text-muted-foreground transition hover:text-foreground">
+            <Paperclip className="size-3.5" />
+          </button>
+        </div>
+      </div>
+      <button className="grid size-9 place-items-center rounded-lg border border-hairline bg-foreground/5 text-muted-foreground transition hover:text-foreground">
+        <Mic className="size-4" />
+      </button>
+      <button className="grid size-9 place-items-center rounded-lg bg-gradient-to-br from-primary to-cyan/80 text-primary-foreground shadow-[var(--glow-primary)] transition hover:brightness-110">
+        <Send className="size-4" />
+      </button>
+    </div>
+  );
+}
+
+function ComposerExpired() {
+  return (
+    <div className="flex items-end gap-2 opacity-95">
+      <button className="grid size-9 place-items-center rounded-lg border border-hairline bg-foreground/5 text-muted-foreground/60 transition">
+        <Plus className="size-4" />
+      </button>
+      <div className="relative flex-1">
+        <textarea
+          rows={1}
+          disabled
+          placeholder="Sessão expirada — selecione um template aprovado para retomar a conversa"
+          className="w-full resize-none rounded-xl border border-amber/25 bg-amber/[0.04] px-4 py-2.5 pr-32 text-[13px] text-muted-foreground placeholder:text-muted-foreground/80 backdrop-blur-md outline-none"
+        />
+        <div className="absolute right-2 top-1.5 flex items-center gap-1">
+          <button className="inline-flex items-center gap-1 rounded-md border border-amber/35 bg-amber/12 px-2 py-1 text-[10px] font-medium text-amber transition hover:bg-amber/20">
+            <Sparkles className="size-3" /> Templates
+          </button>
+        </div>
+      </div>
+      <button className="grid size-9 place-items-center rounded-lg border border-hairline bg-foreground/5 text-muted-foreground/60">
+        <Mic className="size-4" />
+      </button>
+    </div>
+  );
+}
+
+/* ===================== Bubbles (text · template · attachment · note · ai) ===================== */
+
 function MessageBubble({ m, index }: { m: ChatMessage; index: number }) {
+  const delay = { animationDelay: `${index * 50}ms` } as React.CSSProperties;
+
   if (m.from === "ai") {
     return (
       <div
         className="anim-in self-center max-w-[80%] rounded-2xl border border-primary/25 bg-primary/8 px-4 py-2.5 backdrop-blur-md"
-        style={{ animationDelay: `${index * 50}ms` }}
+        style={delay}
       >
         <div className="flex items-center gap-2">
           <span className="grid size-5 place-items-center rounded-md bg-primary/20 text-primary">
@@ -538,13 +623,152 @@ function MessageBubble({ m, index }: { m: ChatMessage; index: number }) {
     );
   }
 
+  if (m.from === "note") {
+    return (
+      <div
+        className="anim-in self-stretch rounded-2xl border border-amber/30 bg-amber/[0.06] px-4 py-3 backdrop-blur-md"
+        style={delay}
+      >
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="grid size-5 place-items-center rounded-md bg-amber/20 text-amber">
+              <Pin className="size-3" />
+            </span>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-amber">
+              Nota interna
+            </span>
+            {m.noteAuthor && (
+              <span className="text-[10px] text-muted-foreground">· {m.noteAuthor}</span>
+            )}
+          </div>
+          <span className="num font-mono text-[10px] text-muted-foreground">{m.time}</span>
+        </div>
+        <p className="mt-1.5 text-[12.5px] leading-relaxed text-foreground/90">{m.text}</p>
+      </div>
+    );
+  }
+
   const isMe = m.from === "me";
+
+  if (m.variant === "attachment" && m.file) {
+    return (
+      <div
+        className={cn("anim-in flex items-end gap-2", isMe ? "justify-end" : "justify-start")}
+        style={delay}
+      >
+        {!isMe && <ChannelAvatar initials="AR" size="sm" tone="success" />}
+        <div className="max-w-[70%]">
+          <div
+            className={cn(
+              "flex items-center gap-3 rounded-2xl border px-3 py-2.5 shadow-[var(--elev-1)] backdrop-blur-md",
+              isMe
+                ? "rounded-br-md border-primary/30 bg-primary/15"
+                : "rounded-bl-md border-hairline bg-surface/70",
+            )}
+          >
+            <span
+              className={cn(
+                "grid size-10 place-items-center rounded-lg",
+                isMe ? "bg-primary/25 text-primary-foreground" : "bg-foreground/10 text-foreground",
+              )}
+            >
+              <FileText className="size-5" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[12.5px] font-medium text-foreground">
+                {m.file.name}
+              </p>
+              <p className="num font-mono text-[10px] text-muted-foreground">
+                PDF · {m.file.size}
+              </p>
+            </div>
+            <button
+              className={cn(
+                "grid size-8 place-items-center rounded-lg transition",
+                isMe
+                  ? "bg-background/15 text-foreground hover:bg-background/25"
+                  : "bg-foreground/5 text-muted-foreground hover:text-foreground",
+              )}
+            >
+              <Download className="size-3.5" />
+            </button>
+          </div>
+          <div
+            className={cn(
+              "mt-1 flex items-center gap-1.5 px-2 num font-mono text-[10px] text-muted-foreground",
+              isMe ? "justify-end" : "justify-start",
+            )}
+          >
+            <Clock className="size-2.5" /> {m.time}
+            {m.read && <CheckCheck className="size-3 text-cyan" />}
+          </div>
+        </div>
+        {isMe && <ChannelAvatar initials="AE" size="sm" tone="amber" />}
+      </div>
+    );
+  }
+
+  if (m.variant === "template") {
+    return (
+      <div
+        className={cn("anim-in flex items-end gap-2", isMe ? "justify-end" : "justify-start")}
+        style={delay}
+      >
+        {!isMe && <ChannelAvatar initials="AR" size="sm" tone="success" />}
+        <div className="max-w-[70%]">
+          <div
+            className={cn(
+              "rounded-2xl px-4 py-2.5 text-[13px] leading-relaxed shadow-[var(--elev-1)]",
+              isMe
+                ? "bg-gradient-to-br from-primary to-cyan/80 text-primary-foreground rounded-br-md"
+                : "bg-surface/70 text-foreground border border-hairline rounded-bl-md backdrop-blur-md",
+            )}
+          >
+            <div className="mb-1.5 flex items-center gap-1.5">
+              <span
+                className={cn(
+                  "inline-flex items-center gap-1 rounded-md border px-1.5 py-px text-[9px] font-semibold uppercase tracking-[0.16em]",
+                  isMe
+                    ? "border-primary-foreground/40 bg-primary-foreground/15 text-primary-foreground"
+                    : "border-amber/35 bg-amber/12 text-amber",
+                )}
+              >
+                <Sparkles className="size-2.5" /> Template
+              </span>
+              {m.templateId && (
+                <span
+                  className={cn(
+                    "num font-mono text-[10px]",
+                    isMe ? "text-primary-foreground/75" : "text-muted-foreground",
+                  )}
+                >
+                  [TEMPLATE:{m.templateId}]
+                </span>
+              )}
+            </div>
+            {m.text}
+          </div>
+          <div
+            className={cn(
+              "mt-1 flex items-center gap-1.5 px-2 num font-mono text-[10px] text-muted-foreground",
+              isMe ? "justify-end" : "justify-start",
+            )}
+          >
+            <Clock className="size-2.5" /> {m.time}
+            {m.read && <CheckCheck className="size-3 text-cyan" />}
+          </div>
+        </div>
+        {isMe && <ChannelAvatar initials="AE" size="sm" tone="amber" />}
+      </div>
+    );
+  }
+
   return (
     <div
       className={cn("anim-in flex items-end gap-2", isMe ? "justify-end" : "justify-start")}
-      style={{ animationDelay: `${index * 50}ms` }}
+      style={delay}
     >
-      {!isMe && <ChannelAvatar initials="DA" size="sm" tone="success" />}
+      {!isMe && <ChannelAvatar initials="AR" size="sm" tone="success" />}
       <div className="max-w-[70%]">
         <div
           className={cn(
@@ -571,7 +795,7 @@ function MessageBubble({ m, index }: { m: ChatMessage; index: number }) {
   );
 }
 
-/* ===================== Coluna 3 — Deal & Contato ===================== */
+/* ===================== Coluna 3 — Deal & Contato (Ana) ===================== */
 
 function DealPanel() {
   return (
@@ -584,97 +808,64 @@ function DealPanel() {
       </header>
 
       <div className="flex-1 overflow-y-auto px-5 pb-6">
-        {/* Identidade */}
+        {/* Identidade — Ana, sem tags */}
         <div className="flex items-start gap-3 pb-4">
-          <ChannelAvatar initials="DA" channel="whatsapp" size="lg" tone="success" />
+          <ChannelAvatar initials="AR" channel="whatsapp" size="lg" tone="success" />
           <div className="min-w-0 flex-1">
             <h4 className="font-display text-[16px] font-semibold tracking-tight text-aurora">
-              Diego Alves
+              Ana Beatriz Ramos
             </h4>
             <p className="num mt-0.5 font-mono text-[11px] text-muted-foreground">
-              +55 41 99812-3456
+              +55 11 92222-2222
             </p>
-            <div className="mt-2 flex flex-wrap items-center gap-1">
-              <span className={cn("rounded-md border px-1.5 py-px text-[9px] font-medium uppercase tracking-wider", tagTone.cyan)}>
-                Em Curso
-              </span>
-              <span className={cn("rounded-md border px-1.5 py-px text-[9px] font-medium uppercase tracking-wider", tagTone.primary)}>
-                Frio
-              </span>
-            </div>
           </div>
         </div>
 
         <SectionDivider label="Negócio" action="Layout" />
 
-        {/* Deal card */}
-        <div className="lux-card p-4">
-          <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-            Negócio ativo
+        {/* Empty state — sem negócio ativo */}
+        <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-border bg-foreground/[0.02] py-7 text-center">
+          <span className="grid size-10 place-items-center rounded-full border border-hairline bg-foreground/5 text-muted-foreground">
+            <Tag className="size-4" />
+          </span>
+          <p className="text-[12px] font-medium text-foreground">Nenhum negócio ativo</p>
+          <p className="text-[11px] text-muted-foreground">
+            Crie um deal para acompanhar a jornada
           </p>
-          <h5 className="mt-1 font-display text-[15px] font-semibold text-foreground">
-            Curso de IA — Diego Alves
-          </h5>
-
-          <div className="mt-3 flex items-baseline justify-between gap-2">
-            <span className="num font-display text-2xl font-semibold text-aurora">
-              R$ 119,00
-            </span>
-            <span className={cn("rounded-md border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider", tagTone.primary)}>
-              <Tag className="mr-1 inline size-2.5" /> Qualificação
-            </span>
-          </div>
-
-          {/* Progress steps */}
-          <div className="mt-3 flex items-center gap-1">
-            {["primary", "muted", "muted", "muted", "muted"].map((tone, i) => (
-              <span
-                key={i}
-                className={cn(
-                  "h-1.5 flex-1 rounded-full",
-                  tone === "primary"
-                    ? "bg-gradient-to-r from-primary to-cyan shadow-[0_0_10px_var(--primary)]"
-                    : "bg-foreground/8",
-                )}
-              />
-            ))}
-          </div>
-          <div className="mt-1.5 flex justify-between text-[9px] uppercase tracking-wider text-muted-foreground">
-            <span>Qualif.</span>
-            <span>Contato</span>
-            <span>Proposta</span>
-            <span>Negoc.</span>
-            <span>Fechado</span>
-          </div>
-
-          {/* Fields */}
-          <div className="mt-4 space-y-2.5">
-            <Field label="Responsável" value="Admin EduIT" />
-            <Field
-              label="Estágio"
-              value={
-                <span className={cn("rounded-md border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider", tagTone.primary)}>
-                  Qualificação
-                </span>
-              }
-            />
-            <Field label="Origem" value="Anúncio Meta" />
-            <Field label="Próx. ação" value="Enviar grade + cupom" />
-          </div>
+          <button className="mt-1 inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-br from-primary to-cyan/80 px-3 py-1.5 text-[11px] font-semibold text-primary-foreground shadow-[var(--glow-primary)] transition hover:brightness-110">
+            <Plus className="size-3" /> Criar
+          </button>
         </div>
 
         <SectionDivider label="Contato" />
 
         <div className="space-y-2.5">
-          <Field icon={<Phone className="size-3.5" />} label="Telefone" value={<span className="num font-mono">+55 41 99812-3456</span>} />
-          <Field icon={<Mail className="size-3.5" />} label="E-mail" value={<span className="text-cyan">diego.alves@example.com</span>} />
-          <Field icon={<Star className="size-3.5" />} label="Fase" value={<SelectChip>Lead</SelectChip>} />
+          <Field
+            icon={<Phone className="size-3.5" />}
+            label="Telefone"
+            value={<span className="num font-mono">+55 11 92222-2222</span>}
+          />
+          <Field
+            icon={<Mail className="size-3.5" />}
+            label="E-mail"
+            value={<span className="text-cyan">ana.ramos@example.com</span>}
+          />
+          <Field
+            icon={<Star className="size-3.5" />}
+            label="Fase"
+            value={<SelectChip>Lead</SelectChip>}
+          />
           <Field
             icon={<Zap className="size-3.5" />}
             label="Engajamento"
             value={
-              <span className={cn("rounded-md border px-1.5 py-px text-[10px] font-medium uppercase tracking-wider", tagTone.amber)}>
-                Baixo
+              <span
+                className={cn(
+                  "rounded-md border px-1.5 py-px text-[10px] font-medium uppercase tracking-wider",
+                  tagTone.success,
+                )}
+              >
+                Alto
               </span>
             }
           />
@@ -683,34 +874,43 @@ function DealPanel() {
             label="Interesses"
             value={
               <div className="flex gap-1">
-                <span className={cn("rounded-md border px-1.5 py-px text-[10px] font-medium uppercase tracking-wider", tagTone.primary)}>
-                  Frio
+                <span
+                  className={cn(
+                    "rounded-md border px-1.5 py-px text-[10px] font-medium uppercase tracking-wider",
+                    tagTone.amber,
+                  )}
+                >
+                  Quente
                 </span>
-                <span className={cn("rounded-md border px-1.5 py-px text-[10px] font-medium uppercase tracking-wider", tagTone.cyan)}>
-                  Em Curso
+                <span
+                  className={cn(
+                    "rounded-md border px-1.5 py-px text-[10px] font-medium uppercase tracking-wider",
+                    tagTone.primary,
+                  )}
+                >
+                  Indicação
                 </span>
               </div>
             }
           />
         </div>
 
-        {/* Empty state */}
-        <div className="mt-5 flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-foreground/[0.02] py-6 text-center">
-          <span className="grid size-9 place-items-center rounded-full border border-hairline bg-foreground/5 text-muted-foreground">
-            <Plus className="size-4" />
-          </span>
-          <p className="text-[11px] text-muted-foreground">Nenhum campo configurado</p>
-          <button className="text-[11px] font-medium text-primary hover:underline">
-            Adicionar campo customizado
-          </button>
-        </div>
-
         <SectionDivider label="Todos os negócios" />
 
         <ul className="space-y-1.5">
           {[
-            { title: "Curso de IA — Diego Alves", stage: "Qualificação", tone: "primary" as Tone, value: "R$ 119,00" },
-            { title: "Mentoria Premium", stage: "Proposta", tone: "amber" as Tone, value: "R$ 3.200,00" },
+            {
+              title: "Curso de IA — Turma Abril",
+              stage: "Proposta",
+              tone: "amber" as Tone,
+              value: "R$ 2.490,00",
+            },
+            {
+              title: "Mentoria Indicação",
+              stage: "Qualificação",
+              tone: "primary" as Tone,
+              value: "R$ 890,00",
+            },
           ].map((d) => (
             <li
               key={d.title}
@@ -718,7 +918,12 @@ function DealPanel() {
             >
               <div className="min-w-0">
                 <p className="truncate text-[12px] font-medium text-foreground">{d.title}</p>
-                <span className={cn("mt-0.5 inline-block rounded-md border px-1.5 py-px text-[9px] font-medium uppercase tracking-wider", tagTone[d.tone])}>
+                <span
+                  className={cn(
+                    "mt-0.5 inline-block rounded-md border px-1.5 py-px text-[9px] font-medium uppercase tracking-wider",
+                    tagTone[d.tone],
+                  )}
+                >
                   {d.stage}
                 </span>
               </div>
@@ -726,6 +931,13 @@ function DealPanel() {
             </li>
           ))}
         </ul>
+      </div>
+
+      {/* Footer fixo */}
+      <div className="border-t border-hairline bg-surface/60 px-5 py-3 backdrop-blur-xl">
+        <button className="flex w-full items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-[12px] font-semibold text-primary transition hover:bg-primary/15 hover:shadow-[var(--glow-primary)]">
+          Abrir perfil completo <ChevronRight className="size-3.5" />
+        </button>
       </div>
     </aside>
   );
