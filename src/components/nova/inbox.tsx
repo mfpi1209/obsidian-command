@@ -810,30 +810,47 @@ function MessageBubble({ m, index }: { m: ChatMessage; index: number }) {
         <div className="max-w-[70%]">
           <div
             className={cn(
-              "flex items-center gap-3 rounded-2xl border px-3 py-2.5 shadow-[var(--elev-1)] backdrop-blur-md",
+              "flex items-center gap-3 rounded-2xl border px-3 py-2.5 shadow-[var(--elev-2)] backdrop-blur-md",
               isMe
-                ? "rounded-br-md border-primary/40 bg-primary/12"
-                : "rounded-bl-md border-hairline bg-surface/70",
+                ? "rounded-br-md border-primary/50 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground"
+                : "rounded-bl-md border-hairline bg-surface-raised text-foreground",
             )}
           >
             <span
               className={cn(
                 "grid size-10 place-items-center rounded-lg",
-                isMe ? "bg-primary/20 text-primary" : "bg-foreground/10 text-foreground",
+                isMe
+                  ? "bg-primary-foreground/15 text-primary-foreground"
+                  : "bg-foreground/10 text-foreground",
               )}
             >
               <FileText className="size-5" />
             </span>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[12.5px] font-medium text-foreground">
+              <p
+                className={cn(
+                  "truncate text-[12.5px] font-medium",
+                  isMe ? "text-primary-foreground" : "text-foreground",
+                )}
+              >
                 {m.file.name}
               </p>
-              <p className="num font-mono text-[10px] text-muted-foreground">
+              <p
+                className={cn(
+                  "num font-mono text-[10px]",
+                  isMe ? "text-primary-foreground/75" : "text-muted-foreground",
+                )}
+              >
                 PDF · {m.file.size}
               </p>
             </div>
             <button
-              className="grid size-8 place-items-center rounded-lg bg-foreground/5 text-muted-foreground transition hover:text-foreground"
+              className={cn(
+                "grid size-8 place-items-center rounded-lg transition",
+                isMe
+                  ? "bg-primary-foreground/15 text-primary-foreground hover:bg-primary-foreground/25"
+                  : "bg-foreground/5 text-muted-foreground hover:text-foreground",
+              )}
             >
               <Download className="size-3.5" />
             </button>
