@@ -6,7 +6,7 @@ import { NovaAutomationsList } from "@/components/nova/automations-list";
 type Theme = "dark" | "light" | "carbon";
 const ORDER: Theme[] = ["dark", "light", "carbon"];
 
-export const Route = createFileRoute("/automations")({
+export const Route = createFileRoute("/automations/")({
   head: () => ({
     meta: [
       { title: "NOVA · Automações" },
