@@ -880,10 +880,10 @@ function MessageBubble({ m, index }: { m: ChatMessage; index: number }) {
         <div className="max-w-[70%]">
           <div
             className={cn(
-              "rounded-2xl border px-4 py-2.5 text-[13px] leading-relaxed shadow-[var(--elev-1)] backdrop-blur-md",
+              "rounded-2xl border px-4 py-2.5 text-[13px] leading-relaxed shadow-[var(--elev-2)] backdrop-blur-md",
               isMe
-                ? "rounded-br-md border-success/35 bg-success/10 text-foreground"
-                : "rounded-bl-md border-hairline bg-surface/70 text-foreground",
+                ? "rounded-br-md border-success/45 bg-gradient-to-br from-success to-success/80 text-background"
+                : "rounded-bl-md border-hairline bg-surface-raised text-foreground",
             )}
           >
             <div className="mb-1.5 flex items-center gap-1.5">
@@ -891,14 +891,19 @@ function MessageBubble({ m, index }: { m: ChatMessage; index: number }) {
                 className={cn(
                   "inline-flex items-center gap-1 rounded-md border px-1.5 py-px text-[9px] font-semibold uppercase tracking-[0.16em]",
                   isMe
-                    ? "border-success/40 bg-success/15 text-success"
+                    ? "border-background/30 bg-background/20 text-background"
                     : "border-amber/35 bg-amber/12 text-amber",
                 )}
               >
                 <Sparkles className="size-2.5" /> Template
               </span>
               {m.templateId && (
-                <span className="num font-mono text-[10px] text-muted-foreground">
+                <span
+                  className={cn(
+                    "num font-mono text-[10px]",
+                    isMe ? "text-background/75" : "text-muted-foreground",
+                  )}
+                >
                   [TEMPLATE:{m.templateId}]
                 </span>
               )}
