@@ -12,7 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as KanbanRouteImport } from './routes/kanban'
 import { Route as InboxRouteImport } from './routes/inbox'
 import { Route as DealRouteImport } from './routes/deal'
+import { Route as AutomationsRouteImport } from './routes/automations'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AutomationsNewRouteImport } from './routes/automations.new'
 
 const KanbanRoute = KanbanRouteImport.update({
   id: '/kanban',
@@ -29,41 +31,71 @@ const DealRoute = DealRouteImport.update({
   path: '/deal',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AutomationsRoute = AutomationsRouteImport.update({
+  id: '/automations',
+  path: '/automations',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AutomationsNewRoute = AutomationsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AutomationsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/automations': typeof AutomationsRouteWithChildren
   '/deal': typeof DealRoute
   '/inbox': typeof InboxRoute
   '/kanban': typeof KanbanRoute
+  '/automations/new': typeof AutomationsNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/automations': typeof AutomationsRouteWithChildren
   '/deal': typeof DealRoute
   '/inbox': typeof InboxRoute
   '/kanban': typeof KanbanRoute
+  '/automations/new': typeof AutomationsNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/automations': typeof AutomationsRouteWithChildren
   '/deal': typeof DealRoute
   '/inbox': typeof InboxRoute
   '/kanban': typeof KanbanRoute
+  '/automations/new': typeof AutomationsNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/deal' | '/inbox' | '/kanban'
+  fullPaths:
+    | '/'
+    | '/automations'
+    | '/deal'
+    | '/inbox'
+    | '/kanban'
+    | '/automations/new'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/deal' | '/inbox' | '/kanban'
-  id: '__root__' | '/' | '/deal' | '/inbox' | '/kanban'
+  to: '/' | '/automations' | '/deal' | '/inbox' | '/kanban' | '/automations/new'
+  id:
+    | '__root__'
+    | '/'
+    | '/automations'
+    | '/deal'
+    | '/inbox'
+    | '/kanban'
+    | '/automations/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AutomationsRoute: typeof AutomationsRouteWithChildren
   DealRoute: typeof DealRoute
   InboxRoute: typeof InboxRoute
   KanbanRoute: typeof KanbanRoute
@@ -92,6 +124,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DealRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/automations': {
+      id: '/automations'
+      path: '/automations'
+      fullPath: '/automations'
+      preLoaderRoute: typeof AutomationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -99,11 +138,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/automations/new': {
+      id: '/automations/new'
+      path: '/new'
+      fullPath: '/automations/new'
+      preLoaderRoute: typeof AutomationsNewRouteImport
+      parentRoute: typeof AutomationsRoute
+    }
   }
 }
 
+interface AutomationsRouteChildren {
+  AutomationsNewRoute: typeof AutomationsNewRoute
+}
+
+const AutomationsRouteChildren: AutomationsRouteChildren = {
+  AutomationsNewRoute: AutomationsNewRoute,
+}
+
+const AutomationsRouteWithChildren = AutomationsRoute._addFileChildren(
+  AutomationsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AutomationsRoute: AutomationsRouteWithChildren,
   DealRoute: DealRoute,
   InboxRoute: InboxRoute,
   KanbanRoute: KanbanRoute,
@@ -111,3 +170,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
