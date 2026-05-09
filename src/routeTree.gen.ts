@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as KanbanRouteImport } from './routes/kanban'
 import { Route as InboxRouteImport } from './routes/inbox'
+import { Route as DealRouteImport } from './routes/deal'
 import { Route as IndexRouteImport } from './routes/index'
 
 const KanbanRoute = KanbanRouteImport.update({
@@ -23,6 +24,11 @@ const InboxRoute = InboxRouteImport.update({
   path: '/inbox',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DealRoute = DealRouteImport.update({
+  id: '/deal',
+  path: '/deal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -31,30 +37,34 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/deal': typeof DealRoute
   '/inbox': typeof InboxRoute
   '/kanban': typeof KanbanRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/deal': typeof DealRoute
   '/inbox': typeof InboxRoute
   '/kanban': typeof KanbanRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/deal': typeof DealRoute
   '/inbox': typeof InboxRoute
   '/kanban': typeof KanbanRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/inbox' | '/kanban'
+  fullPaths: '/' | '/deal' | '/inbox' | '/kanban'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/inbox' | '/kanban'
-  id: '__root__' | '/' | '/inbox' | '/kanban'
+  to: '/' | '/deal' | '/inbox' | '/kanban'
+  id: '__root__' | '/' | '/deal' | '/inbox' | '/kanban'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DealRoute: typeof DealRoute
   InboxRoute: typeof InboxRoute
   KanbanRoute: typeof KanbanRoute
 }
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InboxRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/deal': {
+      id: '/deal'
+      path: '/deal'
+      fullPath: '/deal'
+      preLoaderRoute: typeof DealRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -87,19 +104,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DealRoute: DealRoute,
   InboxRoute: InboxRoute,
   KanbanRoute: KanbanRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
