@@ -662,14 +662,14 @@ function MessageBubble({ m, index }: { m: ChatMessage; index: number }) {
             className={cn(
               "flex items-center gap-3 rounded-2xl border px-3 py-2.5 shadow-[var(--elev-1)] backdrop-blur-md",
               isMe
-                ? "rounded-br-md border-primary/30 bg-primary/15"
+                ? "rounded-br-md border-primary/40 bg-primary/12"
                 : "rounded-bl-md border-hairline bg-surface/70",
             )}
           >
             <span
               className={cn(
                 "grid size-10 place-items-center rounded-lg",
-                isMe ? "bg-primary/25 text-primary-foreground" : "bg-foreground/10 text-foreground",
+                isMe ? "bg-primary/20 text-primary" : "bg-foreground/10 text-foreground",
               )}
             >
               <FileText className="size-5" />
@@ -683,12 +683,7 @@ function MessageBubble({ m, index }: { m: ChatMessage; index: number }) {
               </p>
             </div>
             <button
-              className={cn(
-                "grid size-8 place-items-center rounded-lg transition",
-                isMe
-                  ? "bg-background/15 text-foreground hover:bg-background/25"
-                  : "bg-foreground/5 text-muted-foreground hover:text-foreground",
-              )}
+              className="grid size-8 place-items-center rounded-lg bg-foreground/5 text-muted-foreground transition hover:text-foreground"
             >
               <Download className="size-3.5" />
             </button>
